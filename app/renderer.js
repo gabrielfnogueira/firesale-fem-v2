@@ -24,19 +24,31 @@ const renderMarkdownToHtml = (markdown) => {
   htmlView.innerHTML = marked(markdown, { sanitize: true });
 };
 
-const updateUserInterface = () => {
+const updateUserInterface = (isEdited) => {
   let title = "Fire Sale";
 
   if (filePath) {
     title = `${path.basename(filePath)} - ${title}`;
   }
 
+  if (isEdited) {
+    title = `${title} *`;
+  }
+
+  currentWindow.setRepresentedFilename(filePath);
+  currentWindow.setDocumentEdited(isEdited);
+
+  saveMarkdownButton.disabled = !isEdited;
+  revertButton.disabled = !isEdited;
+
   currentWindow.setTitle(title);
 };
 
 markdownView.addEventListener("keyup", (event) => {
   const currentContent = event.target.value;
+
   renderMarkdownToHtml(currentContent);
+  updateUserInterface(currentContent !== originalContent);
 });
 
 openFileButton.addEventListener("click", () => {
