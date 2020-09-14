@@ -68,8 +68,8 @@ exports.saveHtml = (content) => {
   fs.writeFileSync(file, content);
 };
 
-const openFile = (file) => {
+const openFile = (exports.openFile = (file) => {
   const content = fs.readFileSync(file).toString();
   app.addRecentDocument(file);
   mainWindow.webContents.send("file-opened", file, content);
-};
+});
