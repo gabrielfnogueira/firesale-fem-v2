@@ -35,7 +35,7 @@ const updateUserInterface = (isEdited) => {
     title = `${title} *`;
   }
 
-  currentWindow.setRepresentedFilename(filePath);
+  if (filePath) currentWindow.setRepresentedFilename(filePath);
   currentWindow.setDocumentEdited(isEdited);
 
   saveMarkdownButton.disabled = !isEdited;
@@ -55,6 +55,10 @@ openFileButton.addEventListener("click", () => {
   mainProcess.getFileFromUser();
 });
 
+saveMarkdownButton.addEventListener("click", () => {
+  mainProcess.saveMarkdown(filePath, markdownView.value);
+});
+
 ipcRenderer.on("file-opened", (event, file, content) => {
   filePath = file;
   originalContent = content;
@@ -62,5 +66,5 @@ ipcRenderer.on("file-opened", (event, file, content) => {
   markdownView.value = content;
   renderMarkdownToHtml(content);
 
-  updateUserInterface();
+  updateUserInterface(false);
 });
